@@ -66,11 +66,11 @@ def filtracja(inputlist):
                 templist.append(stan)
     return templist
 
-def listaPusta():
-    return True
+def listaPusta(inputlist):
+    return not inputlist #zwraca false jezeli jest pusta
 
-def wybierzWezel():
-    x=0
+def wybierzWezel(list1):
+    return list1.pop(0)
 
 print("Hello World!")
 
@@ -85,6 +85,7 @@ while True:
         break
     tmp = ekspansja(currentState)
     tmp = filtracja(tmp)
-    if listaPusta():
-        break
-    wybierzWezel()
+    lista.join(set(tmp) ^ set(historia))
+    if not lista:
+        break    
+    currentState = wybierzWezel(lista)

@@ -23,12 +23,18 @@ class Stan:
         return str(self.liczbakanibali) + " " + str(self.liczbamisjonarzy) + " " + self.flaga
 
 class Meta:
-    def __init__(self,ls,hist):
-        self.liczbastanow = ls
-        self.dlugoschistori = hist
-        self.seconds = 0
+    def __init__(self):
+        self.liczbastanow = 0
+        self.dlugoschistori = 0
+        self.seconds = time.time()
+        self.expanded = 0
+        self.compar = 0
     def __str__(self):
-        return "liczba rozpatrzonych stanow " + str(self.liczbastanow) + "\ndlugosc historii " + str(self.dlugoschistori) + "\n"
+        return "liczba rozpatrzonych stanow " + str(self.liczbastanow) + \
+            "\ndlugosc historii " + str(self.dlugoschistori) + \
+            "\nwykonano w " + str((time.time() - self.seconds)) + " sekund\n" + \
+            "rozszerzono do " + str(self.expanded) + " stanow\n" + \
+            "porownano " + str(self.compar) + " razy"
 
 
 
@@ -83,13 +89,16 @@ def znajdzRozwiazanie(currentState, mode):
             if MAXMISJONARZY-stan.liczbamisjonarzy>0 and MAXKANIBALI-stan.liczbakanibali>0:
                 s1 = Stan(stan.liczbakanibali+1,stan.liczbamisjonarzy+1, 'L',stan)
                 templist.append(s1)
+            metastats.compar+=7
+            metastats.expanded+=len(templist)
         return templist
 
     def filtracja(inputlist):
         templist = []
         for stan in inputlist:
-            if ((stan.liczbamisjonarzy==0 or stan.liczbamisjonarzy>=stan.liczbakanibali)and (stan.liczbamisjonarzy==MAXMISJONARZY or MAXMISJONARZY-stan.liczbamisjonarzy >= MAXKANIBALI-stan.liczbakanibali)and stan not in lista):
+            if ((stan.liczbamisjonarzy==0 or stan.liczbamisjonarzy>=stan.liczbakanibali)and (stan.liczbamisjonarzy==MAXMISJONARZY or MAXMISJONARZY-stan.liczbamisjonarzy >= MAXKANIBALI-stan.liczbakanibali)and stan not in historia):
                 templist.append(stan)
+            metastats.compar+=4
         return templist
 
     def wybierzWezelDFS():
@@ -149,7 +158,9 @@ def wypiszRozwiazanie(currentState):
 print("Hello World!")
 
 debug = False
-state = Stan(4,4,'L', None)
-metastats = Meta(0,0)
+
+state = Stan(3,3,'L', None)
+metastats = Meta()
+
 wypiszRozwiazanie(znajdzRozwiazanie(state,"dfs"))
 print(metastats)

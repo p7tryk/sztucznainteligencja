@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-""" Algorytm przeszukiwania przestrzeni stanów
+""" Patryk Kaniewski
+Algorytm przeszukiwania przestrzeni stanów
 Wyswietlic droge:
 Wyswietlic liczbe akcji
 wyswietlic liczbe krokow
@@ -54,28 +55,32 @@ def znajdzRozwiazanie(currentState,MAXLODKA, mode):
     
     def ekspansja(stan):
         # dostepne akcje:
-        # 2M, 2K, 1K1M, 1K, 1M
+        # liczbamisjonarzy+liczba.kanibali<rozmiar
         templist = []
 
         if stan.flaga == 'L':
-            for i in (0,MAXKANIBALI):
+            for i in range(0,MAXKANIBALI):
                 for n in range(0,MAXMISJONARZY):
-                    if i+n<MAXLODKA and i+n > 0:
+                    if i+n<=MAXLODKA and i+n > 0:
                         s1=Stan(stan.liczbakanibali-i,stan.liczbamisjonarzy-n,'P',stan)
+                        templist.append(s1)
         else:
             for i in (0,MAXKANIBALI):
                 for n in range(0,MAXMISJONARZY):
-                    if i+n<MAXLODKA and i+n > 0:
+                    if i+n<=MAXLODKA and i+n > 0:
                         s1=Stan(stan.liczbakanibali-i,stan.liczbamisjonarzy-n,'L',stan)
-            metastats.expanded+=len(templist)
+                        templist.append(s1)
+        metastats.expanded+=len(templist)
         return templist
 
     def filtracja(inputlist,historia):
         templist = []
         for stan in inputlist:
-            if ((stan.liczbamisjonarzy==0 or stan.liczbamisjonarzy>=stan.liczbakanibali) and (stan.liczbamisjonarzy==MAXMISJONARZY or MAXMISJONARZY-stan.liczbamisjonarzy >= MAXKANIBALI-stan.liczbakanibali) and checkHistoria(stan,historia)):
-                templist.append(stan)
-            metastats.compar+=4
+            if(checkHistoria(stan, historia)):
+                if(stan.liczbakanibali>=0 and MAXKANIBALI-stan.liczbakanibali >=0 and stan.liczbamisjonarzy >=0 and MAXMISJONARZY -stan.liczbamisjonarzy>=0):
+                    if (stan.liczbamisjonarzy<= MAXMISJONARZY and MAXMISJONARZY-stan.liczbamisjonarzy<= MAXMISJONARZY and stan.liczbakanibali<=MAXKANIBALI and MAXKANIBALI-stan.liczbakanibali<=MAXKANIBALI ):
+                        if ((stan.liczbamisjonarzy==0 or stan.liczbamisjonarzy>=stan.liczbakanibali) and (stan.liczbamisjonarzy==MAXMISJONARZY or MAXMISJONARZY-stan.liczbamisjonarzy >= MAXKANIBALI-stan.liczbakanibali)):
+                            templist.append(stan)
         return templist
 
     def checkHistoria(currentState,historia):
@@ -111,7 +116,7 @@ def znajdzRozwiazanie(currentState,MAXLODKA, mode):
             print("nie ma rozwiazania")
             return None
         else:
-            if mode == "dfs" or len(lista) < 10:
+            if mode == "dfs":
                 currentState = wybierzWezelDFS()
             else:
                 if debug:
@@ -146,7 +151,7 @@ print("Hello World!")
 
 debug = True
 
-state = Stan(2,2,'L', None)
+state = Stan(3,3,'L', None)
 metastats = Meta()
 
 wypiszRozwiazanie(znajdzRozwiazanie(state,2,"bfs"))

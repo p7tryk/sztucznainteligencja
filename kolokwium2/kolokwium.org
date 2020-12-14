@@ -1,0 +1,92 @@
+* intro
+p ^ s -> q
+r V s ^ (~p) -> ~q
+r ^ s ^ q -> q
+* przetworzone
+p ^ s -> q
+r V (s ^~p) -> ~q
+r ^ s ^ q -> p
+
+
+* proof
+rozpatrzamy przypadki z P=1 i Q=1 oraz dowolna kombinacja R i S
+
++ "jeżeli pacjent ma jednocześnie nadciśnienie i wysokie tętno można mu podać którykolwiek z leków."
+** template pqrs
+#+begin_src
+(p ^ s -> q) ^ (r V (s ^~p) -> ~q) ^ (r ^ s ^ q -> p)
+p v q -> r v s
+#+end_src
+** TTTT
+*** lewo
+#+begin_src
+(1 ^ 1 -> 1) ^ (1 V (1 ^ ~1) -> ~1) ^ (1 ^ 1 ^ 1 -> 1)
+(1 -> 1)     ^ (1 V (1 ^ 0) -> 0)   ^ (1 ^ 1 -> 1)
+(1)          ^ (1 V 0 -> 0)         ^ (1 -> 1)
+(1)          ^ (1 -> 0)             ^ (1 -> 1)
+(1)          ^ (0)                  ^ (1)
+0
+#+end_src
+*** prawo
+#+begin_src
+1 v 1 -> 1 v 1
+1 -> 1
+1
+#+end_src
+*** 0 != 1
+
+** TTTF
+*** lewo
+#+begin_src
+(1 ^ 0 -> 1) ^ (1 V (0 ^ ~1) -> ~1) ^ (1 ^ 0 ^ 1 -> 1)
+(0 -> 1)     ^ (1 V (0 ^ ~1) -> ~1) ^ (1 ^ 0 ^ 1 -> 1)
+(0)          ^ (1 V (0 ^ ~1) -> ~1) ^ (1 ^ 0 ^ 1 -> 1)
+0 //bo to jest AND wszystkiego
+#+end_src
+
+*** prawo
+#+begin_src
+1 v 1 -> 1 v 0
+1 -> 1
+1
+#+end_src
+*** 0!=1
+** TTFT
+*** lewo
+#+begin_src
+(1 ^ 1 -> 1) ^ (0 V (1 ^ 0) -> 0) ^ (0 ^ 1 ^ 1 -> 1)
+(1 -> 1)     ^ (0 V (1 ^ 0) -> 0) ^ (0 -> 1)
+(1 -> 1)     ^ (0 V (1 ^ 0) -> 0) ^ (1)
+(1)          ^ (0 V (0) -> 0)     ^ (1)
+(1)          ^ (0 -> 0)           ^ (1)
+1 ^ 1 ^ 1
+
+1
+#+end_src
+*** prawo
+#+begin_src
+1 v 1 -> 0 v 1
+1 -> 1
+1
+#+end_src
+*** 1==1
+** TTFF
+*** lewo
+#+begin_src
+(0 -> 1) ^ (0 V (0 ^ 0) -> 0) ^ (0 ^ 0 ^ 1 -> 1)
+(0 -> 1) ^ (0 V 0 -> 0)       ^ (0 -> 1)
+1        ^ 1                  ^ 1
+1
+#+end_src
+*** prawo
+#+begin_src
+1 v 1 -> 0 v 0
+1 -> 0
+0
+#+end_src
+*** 1!=0
+
+* Wnioski
+AND 3 warunkow i naszego celu "jeżeli pacjent ma jednocześnie nadciśnienie i wysokie tętno można mu podać
+którykolwiek z leków." musialby byc rowny w 4 przypadkach zeby stwierdzenie bylo prawdziwe
+ 
